@@ -19,3 +19,11 @@ Her iki yöntem uygulanmasına rağmen modelin Precision ve F1-Score metrikleri 
 
 Bu başarısızlığın kök nedenini anlamak için verinin dağılımını görselleştirdim:
 ![Veri Dağılımı](images/chart_of_imbalanced_data.png)
+
+Grafikten açıkça görüldüğü üzere; dolandırıcılık işlemleri (turuncu noktalar) ve meşru işlemler (mavi noktalar) geometrik olarak iç içe geçmiş durumdadır. 
+Lojistik Regresyon **doğrusal (linear)** bir modeldir; yani iki sınıfı ayırmak için uzayda tek ve düz bir çizgi çekmek zorundadır. Ancak sınıfların spagetti gibi birbirine karıştığı (non-linear) bu veri yapısında, düz bir sınır çizgisi çekmek matematiksel olarak imkansızdır. SMOTE ile üretilen sentetik veriler de bu karmaşık mavi bulutun içine yerleştiği için, modelin kafası daha da karışmış ve ayrım yeteneğini tamamen kaybetmiştir.
+
+### 4. Sonuç ve Çıkarım
+Bu analiz göstermektedir ki; sınıfların doğrusal olarak ayrılamadığı (non-linear separable) ve iç içe geçtiği dengesiz veri setlerinde, sadece azınlık sınıfını sentetik olarak çoğaltmak (SMOTE) veya cezayı artırmak (Class Weight) yeterli değildir. *(Ek Not: Çoğunluk sınıfını azaltarak eşitleme yapan Undersampling yöntemi de, modelin öğrenmesi gereken kritik desenlerde ciddi bir bilgi kaybına (information loss) yol açacağı ve asıl sorun olan 'doğrusal olmayan veri dağılımı' problemini çözemeyeceği için bu projede bilinçli olarak tercih edilmemiştir.)*
+
+Doğrusal (Linear) modellerin sınırlarına ulaşıldığı bu tarz senaryolarda; veriyi uzayda bölerek kutucuklar halinde inceleyen Karar Ağaçları (Decision Trees), Random Forest veya XGBoost gibi doğrusal olmayan (non-linear) ağaç tabanlı algoritmaların kullanılması teknik bir zorunluluktur.
