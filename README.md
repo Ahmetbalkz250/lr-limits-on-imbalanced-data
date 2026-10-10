@@ -4,26 +4,26 @@ In this project, I attempted to train a logistic regression model on a highly im
 
 As visualized in the analysis below, the core issue is not just the class imbalance, but the non-linear, overlapping nature of the data points. This geometric overlap makes linear models like Logistic Regression fundamentally inadequate for separating the classes in this specific problem.
 
-## 🇹🇷 Türkçe Proje Detayları ve Teknik Analiz
+## Technical Analysis and Project Details
 
-### 1. Problem Tanımı ve Veri Seti
-Bu projede, sınıflar arası aşırı dengesizliğin (class imbalance) bulunduğu bir Kredi Kartı Dolandırıcılığı (Fraud Detection) veri setini inceledim. Veri setinde binlerce meşru işleme karşılık, yalnızca çok küçük bir oranda dolandırıcılık vakası bulunmaktaydı. Bu durum, standart makine öğrenmesi modellerinin sadece çoğunluk sınıfını tahmin ederek (accuracy paradoksu) yanıltıcı derecede yüksek başarı oranları göstermesine sebep olmaktadır.
+### 1. Problem Definition and Dataset
+In this project, I analyzed a Credit Card Fraud Detection dataset that suffers from severe class imbalance. While there are tens of thousands of legitimate transactions, there is only a tiny fraction of fraud cases. This situation causes standard machine learning models to exhibit misleadingly high accuracy rates by simply predicting the majority class (the accuracy paradox).
 
-### 2. Uygulanan Çözüm Stratejileri
-Lojistik Regresyon algoritmasının bu azınlık sınıfını (dolandırıcıları) yakalayabilmesi için iki farklı literatür standardı yöntemi test ettim:
-*   **Class Weight (Sınıf Ağırlıklandırma):** `class_weight_model.py` içerisinde azınlık sınıfının yanlış tahmin edilme cezasını (penalty) matematiksel olarak artırarak modelin odağını dolandırıcılık işlemlerine çekmeye çalıştım.
-*   **SMOTE (Sentetik Veri Üretimi):** `smote_model.py` içerisinde veri setini `StandardScaler` ile ölçeklendirdikten sonra, azınlık sınıfı için sentetik veri noktaları üreterek sınıfları sayısal olarak eşitledim.
+### 2. Implemented Solution Strategies
+To enable the Logistic Regression algorithm to capture the minority class (frauds), I tested two different industry-standard methods:
+* **Class Weight:** In `class_weight_model.py`, I mathematically increased the penalty for misclassifying the minority class, attempting to force the model to focus on the fraud transactions.
+* **SMOTE (Synthetic Minority Over-sampling Technique):** In `smote_model.py`, after scaling the dataset with `StandardScaler`, I generated synthetic data points for the minority class to numerically equalize the classes.
 
-### 3. Geometrik Sınır ve Neden Çöktü?
-Her iki yöntem uygulanmasına rağmen modelin Precision ve F1-Score metrikleri tatmin edici seviyelerin çok altında kaldı. Algoritma, şüphelendiği meşru işlemleri de dolandırıcı olarak etiketleyerek aşırı hata yapmaya başladı (False Positive patlaması). 
+### 3. Geometric Boundary and Why It Failed
+Despite applying both methods, the model's Precision and F1-Score metrics remained far below satisfactory levels. The algorithm started making excessive errors by labeling legitimate transactions as fraud (a massive increase in False Positives).
 
-Bu başarısızlığın kök nedenini anlamak için verinin dağılımını görselleştirdim:
-![Veri Dağılımı](images/chart_of_imbalanced_data.png)
+To understand the root cause of this failure, I visualized the data distribution:
 
-Grafikten açıkça görüldüğü üzere; dolandırıcılık işlemleri (turuncu noktalar) ve meşru işlemler (mavi noktalar) geometrik olarak iç içe geçmiş durumdadır. 
-Lojistik Regresyon **doğrusal (linear)** bir modeldir; yani iki sınıfı ayırmak için uzayda tek ve düz bir çizgi çekmek zorundadır. Ancak sınıfların spagetti gibi birbirine karıştığı (non-linear) bu veri yapısında, düz bir sınır çizgisi çekmek matematiksel olarak imkansızdır. SMOTE ile üretilen sentetik veriler de bu karmaşık mavi bulutun içine yerleştiği için, modelin kafası daha da karışmış ve ayrım yeteneğini tamamen kaybetmiştir.
+![Transaction Data Scatter Plot](images/chart_of_imbalanced_data.png)
 
-### 4. Sonuç ve Çıkarım
-Bu analiz göstermektedir ki; sınıfların doğrusal olarak ayrılamadığı (non-linear separable) ve iç içe geçtiği dengesiz veri setlerinde, sadece azınlık sınıfını sentetik olarak çoğaltmak (SMOTE) veya cezayı artırmak (Class Weight) yeterli değildir. *(Ek Not: Çoğunluk sınıfını azaltarak eşitleme yapan Undersampling yöntemi de, modelin öğrenmesi gereken kritik desenlerde ciddi bir bilgi kaybına (information loss) yol açacağı ve asıl sorun olan 'doğrusal olmayan veri dağılımı' problemini çözemeyeceği için bu projede bilinçli olarak tercih edilmemiştir.)*
+As clearly seen from the graph, fraud transactions (orange dots) and legitimate transactions (blue dots) are geometrically overlapping. Logistic Regression is a **linear** model; meaning it must draw a single, straight line in space to separate the two classes. However, in this non-linear data structure where classes are mixed like spaghetti, drawing a straight boundary is mathematically impossible. Since the synthetic data generated by SMOTE also settled into this complex blue cloud, the model became even more confused and completely lost its separation ability.
 
-Doğrusal (Linear) modellerin sınırlarına ulaşıldığı bu tarz senaryolarda; veriyi uzayda bölerek kutucuklar halinde inceleyen Karar Ağaçları (Decision Trees), Random Forest veya XGBoost gibi doğrusal olmayan (non-linear) ağaç tabanlı algoritmaların kullanılması teknik bir zorunluluktur.
+### 4. Conclusion and Takeaways
+This analysis demonstrates that in imbalanced datasets where classes are not linearly separable, simply equalizing the data count (SMOTE) or increasing the penalty (Class Weight) is not enough. *(Side Note: Random Undersampling was deliberately not preferred in this project, as reducing the majority class would cause serious information loss in critical patterns and fail to solve the core issue of non-linear data distribution.)*
+
+In such scenarios where linear models reach their geometric limits, using non-linear, tree-based algorithms that divide the data space into regions—such as Decision Trees, Random Forest, or XGBoost—becomes a technical necessity.
