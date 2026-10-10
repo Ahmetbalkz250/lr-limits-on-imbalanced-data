@@ -7,7 +7,7 @@ As visualized in the analysis below, the core issue is not just the class imbala
 ## Technical Analysis and Project Details
 
 ### 1. Problem Definition and Dataset
-In this project, I analyzed a Credit Card Fraud Detection dataset that suffers from severe class imbalance. While there are tens of thousands of legitimate transactions, there is only a tiny fraction of fraud cases. This situation causes standard machine learning models to exhibit misleadingly high accuracy rates by simply predicting the majority class (the accuracy paradox).
+In this project, I analyzed a Credit Card Fraud Detection dataset that suffers from severe class imbalance. While there are thousands of legitimate transactions, there is only a tiny fraction of fraud cases. This situation causes standard machine learning models to exhibit misleadingly high accuracy rates by simply predicting the majority class (the accuracy paradox).
 
 ### 2. Implemented Solution Strategies
 To enable the Logistic Regression algorithm to capture the minority class (frauds), I tested two different industry-standard methods:
