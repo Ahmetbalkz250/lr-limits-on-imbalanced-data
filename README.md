@@ -18,3 +18,4 @@ Lojistik Regresyon algoritmasının bu azınlık sınıfını (dolandırıcılar
 Her iki yöntem uygulanmasına rağmen modelin Precision ve F1-Score metrikleri tatmin edici seviyelerin çok altında kaldı. Algoritma, şüphelendiği meşru işlemleri de dolandırıcı olarak etiketleyerek aşırı hata yapmaya başladı (False Positive patlaması). 
 
 Bu başarısızlığın kök nedenini anlamak için verinin dağılımını görselleştirdim:
+![Veri Dağılımı](images/chart_of_imbalanced_data.png)
